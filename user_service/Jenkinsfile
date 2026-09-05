@@ -1,0 +1,136 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        skipDefaultCheckout(true)
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out development branch...'
+
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/development']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'github-jenkins',
+                        url: 'https://github.com/VasanthRazendhiran/ride-hailing-backend.git'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Environment') {
+            steps {
+                echo 'Checking build environment...'
+
+                sh '''
+                    echo "Java version:"
+                    java -version
+
+                    echo ""
+                    echo "Maven version:"
+                    chmod +x mvnw
+                    ./mvnw -version
+                '''
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                echo 'Compiling application...'
+
+                sh './mvnw clean compile'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                echo 'Running unit tests...'
+
+                sh './mvnw test'
+            }
+        }
+
+        stage('Dependency Check') {
+            steps {
+                echo 'Running OWASP Dependency-Check...'
+
+                sh '''
+                    ./mvnw org.owasp:dependency-check-maven:check \
+                        -DskipTests
+                '''
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging application...'
+
+                sh './mvnw package -DskipTests'
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                echo 'Archiving application JAR...'
+
+                archiveArtifacts(
+                    artifacts: 'target/*.jar',
+                    fingerprint: true
+                )
+            }
+        }
+
+        stage('Archive Security Report') {
+            steps {
+                echo 'Archiving OWASP Dependency-Check report...'
+
+                archiveArtifacts(
+                    artifacts: 'target/dependency-check-report.*',
+                    allowEmptyArchive: true,
+                    fingerprint: true
+                )
+            }
+        }
+    }
+
+    post {
+
+        always {
+            junit(
+                testResults: 'target/surefire-reports/*.xml',
+                allowEmptyResults: true
+            )
+
+            cleanWs()
+        }
+
+        success {
+            echo '''
+========================================
+BUILD SUCCESSFUL
+========================================
+Ride Hailing User Service
+Branch: development
+Security scan: Completed
+Application packaged successfully
+========================================
+'''
+        }
+
+        failure {
+            echo '''
+========================================
+BUILD FAILED
+========================================
+Check the Jenkins console output.
+========================================
+'''
+        }
+    }
+}
