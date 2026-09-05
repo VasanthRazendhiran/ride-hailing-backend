@@ -55,6 +55,22 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                dir('user_service') {
+                    echo 'Running SonarQube analysis...'
+
+                    withSonarQubeEnv('sonarqube') {
+                        sh '''
+                            ./mvnw sonar:sonar \
+                                -Dsonar.projectKey=ride-hailing-user-service \
+                                -Dsonar.projectName="Ride Hailing User Service"
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Package') {
             steps {
                 dir('user_service') {
@@ -95,7 +111,7 @@ BUILD SUCCESSFUL
 ========================================
 Ride Hailing User Service
 Branch: development
-Application compiled, tested and packaged
+Application compiled, tested, analyzed and packaged
 ========================================
 '''
         }
