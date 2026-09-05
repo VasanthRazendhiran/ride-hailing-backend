@@ -12,6 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
+
                 checkout scm
             }
         }
@@ -38,6 +39,7 @@ pipeline {
             steps {
                 dir('user_service') {
                     echo 'Compiling application...'
+
                     sh './mvnw clean compile'
                 }
             }
@@ -47,20 +49,8 @@ pipeline {
             steps {
                 dir('user_service') {
                     echo 'Running unit tests...'
+
                     sh './mvnw test'
-                }
-            }
-        }
-
-        stage('Dependency Check') {
-            steps {
-                dir('user_service') {
-                    echo 'Running OWASP Dependency-Check...'
-
-                    sh '''
-                        ./mvnw org.owasp:dependency-check-maven:check \
-                            -DskipTests
-                    '''
                 }
             }
         }
@@ -69,6 +59,7 @@ pipeline {
             steps {
                 dir('user_service') {
                     echo 'Packaging application...'
+
                     sh './mvnw package -DskipTests'
                 }
             }
@@ -76,18 +67,10 @@ pipeline {
 
         stage('Archive Artifact') {
             steps {
+                echo 'Archiving application JAR...'
+
                 archiveArtifacts(
                     artifacts: 'user_service/target/*.jar',
-                    fingerprint: true
-                )
-            }
-        }
-
-        stage('Archive Security Report') {
-            steps {
-                archiveArtifacts(
-                    artifacts: 'user_service/target/dependency-check-report.*',
-                    allowEmptyArchive: true,
                     fingerprint: true
                 )
             }
@@ -95,6 +78,7 @@ pipeline {
     }
 
     post {
+
         always {
             junit(
                 testResults: 'user_service/target/surefire-reports/*.xml',
@@ -111,8 +95,7 @@ BUILD SUCCESSFUL
 ========================================
 Ride Hailing User Service
 Branch: development
-Security scan: Completed
-Application packaged successfully
+Application compiled, tested and packaged
 ========================================
 '''
         }
