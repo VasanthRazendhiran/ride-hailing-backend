@@ -39,6 +39,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(response);
 	}
 
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+		ErrorResponse response = ErrorResponse.builder().timestamp(LocalDateTime.now()).code("USER_NOT_FOUND")
+				.message(ex.getMessage()).build();
+
+		return ResponseEntity.badRequest().body(response);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
 
