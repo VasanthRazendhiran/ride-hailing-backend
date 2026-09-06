@@ -1,8 +1,10 @@
-package com.devavasanth.ridehailing.userservice.audit;
+package com.devavasanth.ridehailing.userservice.entity.audit;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,8 +22,10 @@ public abstract class AuditTableEntity {
 
 	@LastModifiedDate
 	private LocalDateTime updated_at;
-	
+
+	@CreatedBy
 	private String created_by;
-	
+
+	@LastModifiedBy
 	private String update_by;
 }

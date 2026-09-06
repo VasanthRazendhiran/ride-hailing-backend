@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 
-import com.devavasanth.ridehailing.userservice.audit.AuditTableEntity;
 import com.devavasanth.ridehailing.userservice.constants.Roles;
 import com.devavasanth.ridehailing.userservice.constants.UserStatus;
+import com.devavasanth.ridehailing.userservice.entity.audit.AuditTableEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,8 +15,18 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class Users extends AuditTableEntity {
 
@@ -52,4 +62,5 @@ public class Users extends AuditTableEntity {
 
 	@Column(name = "last_login_at")
 	private LocalDateTime lastLoginAt;
+
 }

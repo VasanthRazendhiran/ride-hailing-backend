@@ -10,16 +10,15 @@ import com.devavasanth.ridehailing.userservice.validation.PasswordValidatior;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-
 @Documented
 @Constraint(validatedBy = PasswordValidatior.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPassword {
 
-	String message() default "invalid password";
+    String message() default "invalid password";
 
-	Class<?>[] group() default {};
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }
