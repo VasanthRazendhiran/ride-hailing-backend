@@ -82,4 +82,10 @@ public class UserServiceImpl implements UserService {
 		return LoginResponse.builder().accessToken(token).tokenType("Bearer").expireIn(900L).build();
 	}
 
+	@Override
+	public UserResponse getCurrentUser(String email) {
+		Users user = userRespository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("user not found"));
+		return userMapper.toResponse(user);
+	}
+
 }
