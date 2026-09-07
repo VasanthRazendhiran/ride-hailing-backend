@@ -47,6 +47,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(response);
 	}
 
+	@ExceptionHandler(ValidateTokenException.class)
+	public ResponseEntity<ErrorResponse> handleTokenException(ValidateTokenException ex) {
+		ErrorResponse response = ErrorResponse.builder().timestamp(LocalDateTime.now()).code("UNAUTHORIZED")
+				.message(ex.getMessage()).build();
+
+		return ResponseEntity.badRequest().body(response);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
 

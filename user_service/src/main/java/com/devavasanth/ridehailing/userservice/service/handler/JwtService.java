@@ -1,4 +1,4 @@
-package com.devavasanth.ridehailing.userservice.service;
+package com.devavasanth.ridehailing.userservice.service.handler;
 
 import java.security.Key;
 import java.util.Date;

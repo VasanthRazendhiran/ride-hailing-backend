@@ -11,8 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.devavasanth.ridehailing.userservice.service.CustomerUserDetailsService;
-import com.devavasanth.ridehailing.userservice.service.JwtService;
+import com.devavasanth.ridehailing.userservice.service.handler.CustomerUserDetailsService;
+import com.devavasanth.ridehailing.userservice.service.handler.JwtService;
 
 import ch.qos.logback.core.subst.Token;
 import jakarta.servlet.FilterChain;
